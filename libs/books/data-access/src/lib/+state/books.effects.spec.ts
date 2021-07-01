@@ -7,7 +7,6 @@ import { createBook, SharedTestingModule } from '@tmo/shared/testing';
 import { BooksEffects } from './books.effects';
 import * as BooksActions from './books.actions';
 import { HttpTestingController } from '@angular/common/http/testing';
-import {take} from "rxjs/operators";
 
 describe('BooksEffects', () => {
   let actions: ReplaySubject<any>;
@@ -33,7 +32,7 @@ describe('BooksEffects', () => {
       actions = new ReplaySubject();
       actions.next(BooksActions.searchBooks({ term: '' }));
 
-      effects.searchBooks$.pipe(take(1)).subscribe(action => {
+      effects.searchBooks$.subscribe(action => {
         expect(action).toEqual(
           BooksActions.searchBooksSuccess({ books: [createBook('A')] })
         );

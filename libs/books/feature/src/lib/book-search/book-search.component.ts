@@ -9,7 +9,6 @@ import {
 } from '@tmo/books/data-access';
 import { FormBuilder } from '@angular/forms';
 import { Book } from '@tmo/shared/models';
-import {Observable} from "rxjs";
 
 @Component({
   selector: 'tmo-book-search',
@@ -17,7 +16,7 @@ import {Observable} from "rxjs";
   styleUrls: ['./book-search.component.scss']
 })
 export class BookSearchComponent implements OnInit {
-  books$: Observable<ReadingListBook[]>;
+  books: ReadingListBook[];
 
   searchForm = this.fb.group({
     term: ''
@@ -33,7 +32,15 @@ export class BookSearchComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.books$ = this.store.select(getAllBooks);
+    this.store.select(getAllBooks).subscribe(books => {
+      this.books = books;
+    });
+  }
+
+  formatDate(date: void | string) {
+    return date
+      ? new Intl.DateTimeFormat('en-US').format(new Date(date))
+      : undefined;
   }
 
   addBookToReadingList(book: Book) {
