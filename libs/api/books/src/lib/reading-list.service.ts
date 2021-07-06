@@ -8,6 +8,10 @@ const KEY = '[okreads API] Reading List';
 export class ReadingListService {
   private readonly storage = new StorageService<ReadingListItem[]>(KEY, []);
 
+  async reset(): Promise<void> {
+    return this.storage.update(() => []);
+  }
+
   async getList(): Promise<ReadingListItem[]> {
     return this.storage.read();
   }

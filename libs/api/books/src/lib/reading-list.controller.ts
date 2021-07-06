@@ -6,6 +6,11 @@ import { ReadingListService } from './reading-list.service';
 export class ReadingListController {
   constructor(private readonly readingList: ReadingListService) {}
 
+  @Post('/reading-list/reset')
+  async resetReadingList() {
+    return await this.readingList.reset();
+  }
+
   @Get('/reading-list/')
   async getReadingList() {
     return await this.readingList.getList();
