@@ -8,12 +8,28 @@
       <div class="reading-list-item--details--author">
         {{ b.authors.join(',') }}
       </div>
+      <div *ngIf="b.finished" class="reading-list-item--details--author">
+        Finished on {{ b.finishedDate | date:'shortDate' }}
+      </div>
+    </div>
+    <div>
+      <button
+        *ngIf="!b.finished"
+        mat-icon-button
+        color="primary"
+        [attr.aria-label]="'Mark ' + b.title + ' as finished.'"
+        data-testing="finish-book"
+        (click)="markBookAsFinished(b)"
+      >
+        <mat-icon>check_circle</mat-icon>
+      </button>
     </div>
     <div>
       <button
         mat-icon-button
         color="warn"
         [attr.aria-label]="'Remove ' + b.title + ' from reading list'"
+        data-testing="remove-book"
         (click)="removeFromReadingList(b)"
       >
         <mat-icon>remove_circle</mat-icon>

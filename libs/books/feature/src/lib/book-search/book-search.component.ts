@@ -3,13 +3,14 @@ import { Store } from '@ngrx/store';
 import {
   addToReadingList,
   clearSearch,
-  getAllBooks,
+  getAllBooks, getReadingList,
   ReadingListBook,
   searchBooks
 } from '@tmo/books/data-access';
 import { FormBuilder } from '@angular/forms';
 import { Book } from '@tmo/shared/models';
-import {Observable} from "rxjs";
+import {combineLatest, Observable} from "rxjs";
+import {map} from "rxjs/operators";
 
 @Component({
   selector: 'tmo-book-search',
@@ -33,7 +34,26 @@ export class BookSearchComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.books$ = this.store.select(getAllBooks);
+    this.books$ = combineLatest([
+      this.store.select(getAllBooks),
+      this.store.select(getReadingList)])
+    .pipe(
+      map(([books, readingList]) => {
+        return books.map(book => {
+          const bookFound = readingList.find(listItem => listItem.bookId === book.id);
+
+          if (bookFound) {
+            return {
+              ...book,
+              finished: bookFound.finished,
+              finishedDate: bookFound.finishedDate
+            }
+          }
+
+          return book;
+        })
+      })
+    );
   }
 
   addBookToReadingList(book: Book) {
